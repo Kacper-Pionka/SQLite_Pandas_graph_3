@@ -13,8 +13,8 @@ print("Opened database successfully");
 
 cursor = conn.execute("SELECT billingcountry, SUM(total) FROM invoice GROUP BY billingcountry ORDER BY SUM(total)")
 for row in cursor:
-   if row[1] > 50:
-      x.append(row[0])
+   if row[1] > 50:      #values that are smaller than 50 are summed and
+      x.append(row[0])  #displayed on chart as Others
       y.append(row[1])
    else:
       z = row[1] + z
@@ -22,16 +22,15 @@ for row in cursor:
 y.append(z)
 x.append('Others')
 
+#prints data used to draw chart
 print(pd.DataFrame(data = {'countries' : x,
                            'total' : y}))
 
-df = pd.DataFrame(
-   data = {'country' : x, 'value' : y})
-
-
+#colors used in pie chart
 colors = ['#00ff66','#a6ff00','#ffb300','#ff5e00','#ff1100',
           '#00ffd5','#00a6ff','#002aff','#c800ff','#ff0088']
 
+#value of explode
 explode = [0.03 for i in range(len(x))]
 
 fig1, ax1 = plt.subplots()
@@ -43,7 +42,6 @@ centre_circle = plt.Circle((0,0),0.70,fc='white')
 fig = plt.gcf()
 fig.gca().add_artist(centre_circle)
 
-# Equal aspect ratio ensures that pie is drawn as a circle
 ax1.axis('equal')
 plt.tight_layout()
 plt.show()
