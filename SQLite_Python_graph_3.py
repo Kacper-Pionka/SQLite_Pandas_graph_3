@@ -13,17 +13,39 @@ print("Opened database successfully");
 
 cursor = conn.execute("SELECT billingcountry, SUM(total) FROM invoice GROUP BY billingcountry ORDER BY SUM(total)")
 for row in cursor:
-   x.append(row[0])
-   y.append(row[1])
-'''
-xa = {
-   'one' : x,
-   'two' : y}
+   if row[1] > 50:
+      x.append(row[0])
+      y.append(row[1])
+   else:
+      z = row[1] + z
+   
+y.append(z)
+x.append('Others')
 
-myvar = pd.DataFrame(xa)
-print(myvar.to_string())''' #Prints all data for pie chart
+print(pd.DataFrame(data = {'countries' : x,
+                           'total' : y}))
 
-plt.pie(y, labels = x)
-plt.show()              #Shows total amount of money spend in each country in form of pie chart
+df = pd.DataFrame(
+   data = {'country' : x, 'value' : y})
+
+
+colors = ['#00ff66','#a6ff00','#ffb300','#ff5e00','#ff1100',
+          '#00ffd5','#00a6ff','#002aff','#c800ff','#ff0088']
+
+explode = [0.03 for i in range(len(x))]
+
+fig1, ax1 = plt.subplots()
+ax1.pie(y, colors = colors, labels = x, autopct='%1.1f%%', startangle=90, pctdistance=0.85,
+        explode = explode)
+
+#draw circle
+centre_circle = plt.Circle((0,0),0.70,fc='white')
+fig = plt.gcf()
+fig.gca().add_artist(centre_circle)
+
+# Equal aspect ratio ensures that pie is drawn as a circle
+ax1.axis('equal')
+plt.tight_layout()
+plt.show()
 
 conn.close()
